@@ -33,7 +33,6 @@ const WHITE = "#ffffff";
 const DEADLINE_RED = "#a65a52";
 const DEADLINE_FILL = "#fff6f4";
 const DEADLINE_STROKE = "#dfaaa2";
-const WATERMARK_GREEN = "rgba(0, 107, 55, 0.075)";
 const layouts = {
   story: {
     width: 1080,
@@ -268,40 +267,6 @@ function drawCenteredLines(lines, x, y, size, lineHeight, weight = 400, color = 
   lines.forEach((line, index) => ctx.fillText(line, x, y + index * lineHeight));
 }
 
-function drawWatermarkWaves(config) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(0, 0, config.width, config.bottomBandY);
-  ctx.clip();
-
-  ctx.strokeStyle = WATERMARK_GREEN;
-  ctx.lineWidth = 3;
-
-  const waveGap = config.height > 1500 ? 120 : 92;
-  const amplitude = config.height > 1500 ? 24 : 18;
-  const wavelength = 360;
-
-  for (let y = 92; y < config.bottomBandY - 60; y += waveGap) {
-    ctx.beginPath();
-    ctx.moveTo(-40, y);
-
-    for (let x = -40; x <= config.width + wavelength; x += wavelength) {
-      ctx.bezierCurveTo(
-        x + wavelength * 0.25,
-        y - amplitude,
-        x + wavelength * 0.75,
-        y + amplitude,
-        x + wavelength,
-        y,
-      );
-    }
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
 function drawJobBadgeIcon(x, y, size) {
   const width = size * 0.8;
   const height = size;
@@ -445,7 +410,6 @@ function drawPoster(format) {
   ctx.clearRect(0, 0, config.width, config.height);
   ctx.fillStyle = WHITE;
   ctx.fillRect(0, 0, config.width, config.height);
-  drawWatermarkWaves(config);
 
   const contentCenter = config.width / 2;
   const hasDeadline = Boolean(data.deadline);
