@@ -60,7 +60,8 @@ const layouts = {
     reqMinSize: 27,
     reqTextPad: 144,
     reqLabelSize: 36,
-    reqInnerTop: 70,
+    reqInnerTop: 54,
+    reqBottomPad: 46,
     bulletRadius: 12,
     emailBlockTop: 1172,
     emailBlockTopWithDeadline: 1138,
@@ -111,7 +112,8 @@ const layouts = {
     reqMinSize: 22,
     reqTextPad: 142,
     reqLabelSize: 32,
-    reqInnerTop: 55,
+    reqInnerTop: 45,
+    reqBottomPad: 38,
     bulletRadius: 10,
     emailBlockTop: 808,
     emailBlockTopWithDeadline: 748,
@@ -416,7 +418,7 @@ function drawPoster(format) {
     config,
   );
   const reqBoxHeight = Math.min(
-    Math.max(config.reqMinHeight, reqLayout.totalHeight + config.reqInnerTop + 24),
+    Math.max(config.reqMinHeight, reqLayout.totalHeight + config.reqInnerTop + config.reqBottomPad),
     emailBlockTop - reqTop - 24,
   );
 
@@ -431,7 +433,7 @@ function drawPoster(format) {
   ctx.fillText("Requisitos:", config.reqX + 61, reqTop - 28);
 
   const reqBodyTop = reqTop + config.reqInnerTop;
-  const reqBodyHeight = reqBoxHeight - config.reqInnerTop - 24;
+  const reqBodyHeight = reqBoxHeight - config.reqInnerTop - config.reqBottomPad;
   let reqCursor = reqBodyTop + Math.max(0, (reqBodyHeight - reqLayout.totalHeight) / 2);
   const bulletX = config.reqX + 43;
   const textX = config.reqX + 82;
