@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerador de Post de Vaga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="editor-panel" aria-label="Campos do post">
+        <div class="brand-strip">
+          <img src="assets/logo-tio-luiz.png" alt="Distribuidora Tio Luiz" />
+          <div>
+            <h1>Gerador de vaga</h1>
+            <p>Story 1080x1920 e feed 1080x1350</p>
+          </div>
+        </div>
+
+        <div class="preset-row" aria-label="Modelos rápidos">
+          <button type="button" class="preset-button is-active" data-preset="vendedor">Vendedor</button>
+          <button type="button" class="preset-button" data-preset="motorista">Motorista</button>
+          <button type="button" class="preset-button" data-preset="promotor">Promotor</button>
+        </div>
+
+        <form id="postForm" class="form-grid">
+          <label>
+            <span>Vaga</span>
+            <input id="jobTitle" type="text" value="Vendedor Externo" />
+          </label>
+
+          <label>
+            <span>Local / região</span>
+            <textarea id="region" rows="3">Região: Aracaju</textarea>
+          </label>
+
+          <label>
+            <span>Requisitos</span>
+            <textarea id="requirements" rows="9">Ter mais de 18 anos;
+Ter experiência na área de vendas;
+Ter CNH categoria AB;
+Ter transporte;
+Ter disponibilidade para viajar;
+Conhecer a região;
+Cordialidade no atendimento;
+Prospecção de clientes;</textarea>
+          </label>
+
+          <label class="range-label">
+            <span>Tamanho da fonte dos requisitos</span>
+            <div class="range-row">
+              <input id="requirementsFontSize" type="range" min="24" max="46" value="42" />
+              <output id="requirementsFontSizeValue">42 px</output>
+            </div>
+          </label>
+
+          <label>
+            <span>Título do e-mail</span>
+            <input id="emailSubject" type="text" value="VEND EXT DIST - AJU" />
+          </label>
+
+          <label>
+            <span>Enviar currículo até</span>
+            <input id="deadline" type="date" />
+          </label>
+
+          <label>
+            <span>E-mail</span>
+            <input id="email" type="email" value="supervisor1@distribuidoratioluiz.com.br" />
+          </label>
+        </form>
+
+        <div class="actions">
+          <button type="button" class="primary-button" id="downloadStoryButton">Baixar Story</button>
+          <button type="button" class="primary-button" id="downloadFeedButton">Baixar Feed</button>
+          <button type="button" class="secondary-button" id="resetButton">Restaurar modelo</button>
+        </div>
+      </section>
+
+      <section class="preview-panel" aria-label="Prévia da arte">
+        <div class="preview-toolbar">
+          <div>
+            <strong>Prévia</strong>
+            <span>Exportação em alta resolução</span>
+          </div>
+          <output id="statusText">Pronto para baixar</output>
+        </div>
+        <div class="canvas-frame">
+          <div class="preview-card">
+            <span>1080 x 1920</span>
+            <canvas id="storyCanvas" width="1080" height="1920" aria-label="Arte story gerada"></canvas>
+          </div>
+          <div class="preview-card">
+            <span>1080 x 1350</span>
+            <canvas id="feedCanvas" width="1080" height="1350" aria-label="Arte feed gerada"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
