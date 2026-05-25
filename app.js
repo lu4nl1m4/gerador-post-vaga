@@ -33,6 +33,7 @@ const WHITE = "#ffffff";
 const DEADLINE_RED = "#a65a52";
 const DEADLINE_FILL = "#fff6f4";
 const DEADLINE_STROKE = "#dfaaa2";
+const WATERMARK_GREEN = "rgba(0, 107, 55, 0.075)";
 const layouts = {
   story: {
     width: 1080,
@@ -267,6 +268,83 @@ function drawCenteredLines(lines, x, y, size, lineHeight, weight = 400, color = 
   lines.forEach((line, index) => ctx.fillText(line, x, y + index * lineHeight));
 }
 
+function drawWatermarkWaves(config) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, config.width, config.bottomBandY);
+  ctx.clip();
+
+  ctx.strokeStyle = WATERMARK_GREEN;
+  ctx.lineWidth = 3;
+
+  const waveGap = config.height > 1500 ? 120 : 92;
+  const amplitude = config.height > 1500 ? 24 : 18;
+  const wavelength = 360;
+
+  for (let y = 92; y < config.bottomBandY - 60; y += waveGap) {
+    ctx.beginPath();
+    ctx.moveTo(-40, y);
+
+    for (let x = -40; x <= config.width + wavelength; x += wavelength) {
+      ctx.bezierCurveTo(
+        x + wavelength * 0.25,
+        y - amplitude,
+        x + wavelength * 0.75,
+        y + amplitude,
+        x + wavelength,
+        y,
+      );
+    }
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawJobBadgeIcon(x, y, size) {
+  const width = size * 0.8;
+  const height = size;
+  const left = x - width / 2;
+  const top = y - height / 2;
+  const radius = size * 0.1;
+
+  ctx.save();
+  ctx.strokeStyle = WHITE;
+  ctx.fillStyle = WHITE;
+  ctx.lineWidth = Math.max(2.5, size * 0.075);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.beginPath();
+  ctx.moveTo(x - size * 0.18, top);
+  ctx.lineTo(x - size * 0.1, top - size * 0.16);
+  ctx.lineTo(x + size * 0.1, top - size * 0.16);
+  ctx.lineTo(x + size * 0.18, top);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(left + radius, top);
+  ctx.arcTo(left + width, top, left + width, top + height, radius);
+  ctx.arcTo(left + width, top + height, left, top + height, radius);
+  ctx.arcTo(left, top + height, left, top, radius);
+  ctx.arcTo(left, top, left + width, top, radius);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x, top + height * 0.36, size * 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(x - size * 0.18, top + height * 0.62);
+  ctx.lineTo(x + size * 0.18, top + height * 0.62);
+  ctx.moveTo(x - size * 0.13, top + height * 0.76);
+  ctx.lineTo(x + size * 0.13, top + height * 0.76);
+  ctx.stroke();
+  ctx.restore();
+}
+
 function drawBadgeCheck(x, y, radius) {
   ctx.save();
   ctx.translate(x, y);
@@ -367,6 +445,7 @@ function drawPoster(format) {
   ctx.clearRect(0, 0, config.width, config.height);
   ctx.fillStyle = WHITE;
   ctx.fillRect(0, 0, config.width, config.height);
+  drawWatermarkWaves(config);
 
   const contentCenter = config.width / 2;
   const hasDeadline = Boolean(data.deadline);
@@ -382,7 +461,7 @@ function drawPoster(format) {
 
   const titleFontSize = fitFont(
     data.jobTitle,
-    config.titleMaxWidth,
+    config.titleMaxWidth - 66,
     config.titleStart,
     config.titleMin,
     900,
@@ -392,7 +471,17 @@ function drawPoster(format) {
   ctx.fillStyle = WHITE;
   ctx.font = font(900, titleFontSize);
   ctx.textBaseline = "middle";
-  ctx.fillText(data.jobTitle, contentCenter, config.titleY + titleHeight / 2 + 2);
+  const titleIconSize = Math.max(26, Math.round(titleFontSize * 0.72));
+  const titleGap = Math.max(13, Math.round(titleFontSize * 0.26));
+  const titleTextWidth = ctx.measureText(data.jobTitle).width;
+  const titleGroupWidth = titleIconSize * 0.8 + titleGap + titleTextWidth;
+  const titleStartX = contentCenter - titleGroupWidth / 2;
+  const titleCenterY = config.titleY + titleHeight / 2 + 2;
+  drawJobBadgeIcon(titleStartX + titleIconSize * 0.4, titleCenterY, titleIconSize);
+  ctx.fillStyle = WHITE;
+  ctx.font = font(900, titleFontSize);
+  ctx.textAlign = "left";
+  ctx.fillText(data.jobTitle, titleStartX + titleIconSize * 0.8 + titleGap, titleCenterY);
 
   let regionSize = config.regionSize;
   let regionLines = wrapText(data.region, config.regionMaxWidth, regionSize, 400);
