@@ -477,13 +477,25 @@ function drawPoster(format) {
 
   drawRoundedRect(config.reqX, reqTop, config.reqWidth, reqBoxHeight, 18, null, GREEN, 2.5);
 
-  ctx.fillStyle = WHITE;
-  ctx.fillRect(config.reqX + 58, reqTop - 22, 214, 40);
   ctx.fillStyle = GREEN;
   ctx.font = font(800, config.reqLabelSize);
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
-  ctx.fillText("Requisitos:", config.reqX + 61, reqTop - 28);
+  const reqLabel = "Requisitos:";
+  const reqLabelX = config.reqX + 61;
+  const reqLabelY = reqTop - Math.round(config.reqLabelSize * 0.62);
+  const reqLabelPaddingX = 20;
+  const reqLabelPaddingY = 8;
+  const reqLabelWidth = ctx.measureText(reqLabel).width;
+  ctx.fillStyle = WHITE;
+  ctx.fillRect(
+    reqLabelX - reqLabelPaddingX,
+    reqLabelY - reqLabelPaddingY,
+    reqLabelWidth + reqLabelPaddingX * 2,
+    config.reqLabelSize + reqLabelPaddingY * 2,
+  );
+  ctx.fillStyle = GREEN;
+  ctx.fillText(reqLabel, reqLabelX, reqLabelY);
 
   const reqBodyTop = reqTop + config.reqInnerTop;
   const reqBodyHeight = reqBoxHeight - config.reqInnerTop - config.reqBottomPad;
